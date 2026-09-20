@@ -6,6 +6,7 @@ import { getGlobalOptions } from "../../lib/command-utils.ts";
 import { readAllIssues, findIssueAbsolutePath } from "../../lib/issue-reader.ts";
 import { parseMarkdown } from "../../lib/frontmatter.ts";
 import { readText } from "../../lib/fs-utils.ts";
+import { readStdin } from "../../lib/stdin.ts";
 import { applyIssueUpdate, writeIssueUpdate } from "../../lib/issue-operations.ts";
 import { printSuccess, printError, verboseLog } from "../../output.ts";
 
@@ -37,7 +38,7 @@ export function registerIssueUpdateCommand(issueCmd: Command): void {
     .option("--remove-checklist <items>", "Remove checklist items by text (comma-separated)")
     .option("--check <items>", "Check items by text (comma-separated)")
     .option("--uncheck <items>", "Uncheck items by text (comma-separated)")
-    .option("-c, --content <content>", "Replace markdown body")
+    .option("-c, --content <content>", "Replace markdown body (or - for stdin)")
     .option("--dry-run", "Preview without writing", false)
     .action(async (options, cmd) => {
       try {
@@ -46,6 +47,12 @@ export function registerIssueUpdateCommand(issueCmd: Command): void {
         const config = await readConfig(projectPath);
 
         verboseLog(`Updating issue ${options.id} in ${projectPath}`);
+
+        // Handle stdin content
+        let content = options.content;
+        if (content === "-") {
+          content = await readStdin();
+        }
 
         // Find the issue
         const allIssues = await readAllIssues(projectPath, config);
@@ -87,7 +94,7 @@ export function registerIssueUpdateCommand(issueCmd: Command): void {
             removeChecklist: options.removeChecklist,
             check: options.check,
             uncheck: options.uncheck,
-            content: options.content,
+            content,
           },
           rawIssue,
           parsed.frontmatter,

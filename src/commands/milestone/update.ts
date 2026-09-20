@@ -8,6 +8,7 @@ import { getGlobalOptions } from "../../lib/command-utils.ts";
 import { readAllMilestones, findMilestoneAbsolutePath } from "../../lib/milestone-reader.ts";
 import { buildMarkdown, parseMarkdown } from "../../lib/frontmatter.ts";
 import { readText, writeText, renameEntry, pathExists } from "../../lib/fs-utils.ts";
+import { readStdin } from "../../lib/stdin.ts";
 import { slugify } from "../../lib/slug.ts";
 import { validateStatus, validatePriority, validateLabels, validateDate, parseCommaSeparated } from "../../lib/validators.ts";
 import { printSuccess, printError, verboseLog } from "../../output.ts";
@@ -29,7 +30,7 @@ export function registerMilestoneUpdateCommand(milestoneCmd: Command): void {
     .option("--remove-checklist <items>", "Remove checklist items by text (comma-separated)")
     .option("--check <items>", "Check items by text (comma-separated)")
     .option("--uncheck <items>", "Uncheck items by text (comma-separated)")
-    .option("-c, --content <content>", "Replace markdown body")
+    .option("-c, --content <content>", "Replace markdown body (or - for stdin)")
     .option("--dry-run", "Preview without writing", false)
     .action(async (options, cmd) => {
       try {
@@ -153,7 +154,7 @@ export function registerMilestoneUpdateCommand(milestoneCmd: Command): void {
         // Content
         let content = parsed.content;
         if (options.content !== undefined) {
-          content = options.content;
+          content = options.content === "-" ? await readStdin() : options.content;
           changes.content = { from: "(previous)", to: "(updated)" };
         }
 

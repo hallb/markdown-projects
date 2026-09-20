@@ -46,7 +46,7 @@ mdp milestone create -p <path> -t "Title" [options]
 | `--due-date <date>` | Due date (YYYY-MM-DD) |
 | `--checklist <items>` | Comma-separated checklist items |
 | `-d, --description <desc>` | Short description |
-| `-c, --content <content>` | Full markdown body |
+| `-c, --content <content>` | Full markdown body (or `-` for stdin) |
 | `--template <name>` | Template name from .mdp/templates/ |
 | `--dry-run` | Preview without creating |
 
@@ -93,7 +93,7 @@ mdp milestone update -p <path> --id <id> [options]
 | `--remove-checklist <items>` | Remove checklist items by text |
 | `--check <items>` | Check items by text |
 | `--uncheck <items>` | Uncheck items by text |
-| `-c, --content <content>` | Replace markdown body |
+| `-c, --content <content>` | Replace markdown body (or `-` for stdin) |
 | `--dry-run` | Preview without writing |
 
 ## Delete

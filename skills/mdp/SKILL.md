@@ -232,7 +232,7 @@ mdp issue update -p <path> --id <id> [options]
 | `--remove-checklist <items>` | Remove checklist items by text |
 | `--check <items>` | Check items by text |
 | `--uncheck <items>` | Uncheck items by text |
-| `-c, --content <content>` | Replace markdown body |
+| `-c, --content <content>` | Replace markdown body (or `-` for stdin) |
 | `--dry-run` | Preview without writing |
 
 #### Delete
@@ -313,7 +313,7 @@ mdp milestone create -p <path> -t "Title" [options]
 | `--due-date <date>` | Due date (YYYY-MM-DD) |
 | `--checklist <items>` | Comma-separated checklist items |
 | `-d, --description <desc>` | Short description |
-| `-c, --content <content>` | Full markdown body |
+| `-c, --content <content>` | Full markdown body (or `-` for stdin) |
 | `--template <name>` | Template name from .mdp/templates/ |
 | `--dry-run` | Preview without creating |
 
@@ -358,7 +358,7 @@ mdp milestone update -p <path> --id <id> [options]
 | `--remove-checklist <items>` | Remove checklist items by text |
 | `--check <items>` | Check items by text |
 | `--uncheck <items>` | Uncheck items by text |
-| `-c, --content <content>` | Replace markdown body |
+| `-c, --content <content>` | Replace markdown body (or `-` for stdin) |
 | `--dry-run` | Preview without writing |
 
 #### Delete
@@ -396,6 +396,27 @@ mdp search -p <path> -q "query text" [--limit <n>]
 ```
 
 Searches project, issues, and milestones by text content using BM25 ranking. Returns matched fields with snippets. Use `--entity project` to search only the project file.
+
+## Writing a multi-line markdown body
+
+`-c, --content` replaces the whole body, so pass the whole body. `-c -` reads it
+from stdin, which is the form that survives newlines, quotes and backticks
+without shell quoting problems:
+
+```bash
+mdp issue update -p . --id ISS-1 -c - <<'EOF'
+## Description
+
+Prose here.
+EOF
+```
+
+`-c "$(cat body.md)"` works as well. What does not work is passing a fragment and
+expecting it to be appended: there is no append flag for the body, and a short
+`-c` value replaces everything that was there. To add a dated note without
+touching the body, use `mdp issue log add` or `mdp milestone log add`.
+
+After writing a body, read it back and check it is on disk.
 
 ## Workflow recommendations
 

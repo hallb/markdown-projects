@@ -7,6 +7,7 @@ import { resolveProjectPath } from "../../lib/project-finder.ts";
 import { getGlobalOptions } from "../../lib/command-utils.ts";
 import { getNextId } from "../../lib/id.ts";
 import { slugify } from "../../lib/slug.ts";
+import { readStdin } from "../../lib/stdin.ts";
 import { buildMarkdown, parseMarkdown } from "../../lib/frontmatter.ts";
 import { ensureDir, writeText, readText, pathExists } from "../../lib/fs-utils.ts";
 import { validateStatus, validatePriority, validateLabels, validateDate, parseCommaSeparated } from "../../lib/validators.ts";
@@ -26,7 +27,7 @@ export function registerMilestoneCreateCommand(milestoneCmd: Command): void {
     .option("--due-date <date>", "Due date (YYYY-MM-DD)")
     .option("--checklist <items>", "Comma-separated checklist items")
     .option("-d, --description <desc>", "Short description")
-    .option("-c, --content <content>", "Full markdown body")
+    .option("-c, --content <content>", "Full markdown body (or - for stdin)")
     .option("--template <name>", "Template name from .mdp/templates/")
     .option("--dry-run", "Preview without creating", false)
     .action(async (options, cmd) => {
@@ -68,7 +69,7 @@ export function registerMilestoneCreateCommand(milestoneCmd: Command): void {
         // Handle content
         let content = "";
         if (options.content) {
-          content = options.content;
+          content = options.content === "-" ? await readStdin() : options.content;
         } else if (options.description) {
           content = `## Goals\n\n${options.description}\n`;
         } else if (templateContent) {

@@ -128,7 +128,7 @@ mdp issue update -p <path> --id <id> [options]
 | `--remove-checklist <items>` | Remove checklist items by text |
 | `--check <items>` | Check items by text |
 | `--uncheck <items>` | Uncheck items by text |
-| `-c, --content <content>` | Replace markdown body |
+| `-c, --content <content>` | Replace markdown body (or `-` for stdin) |
 | `--dry-run` | Preview without writing |
 
 ## Delete
