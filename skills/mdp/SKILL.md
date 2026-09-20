@@ -2,7 +2,7 @@
 name: mdp
 description: Manage file-based projects using markdown. Create, list, update, and delete issues and milestones stored as markdown files with YAML frontmatter. Use when users want to track tasks, manage projects, create issues, update statuses, or work with milestones. Triggers on "create issue", "list issues", "update status", "track task", "project management", "milestone progress".
 license: MIT
-compatibility: Requires mdp installed via `bun install -g github:varunpandey0502/markdown-projects`.
+compatibility: Requires mdp installed via `bun install -g github:hallb/markdown-projects`.
 metadata:
   author: varunpandey0502
   version: "1.3"
@@ -20,7 +20,7 @@ When you start working with an existing project, **immediately read `.mdp/settin
 ## Installation
 
 ```bash
-bun install -g github:varunpandey0502/markdown-projects
+bun install -g github:hallb/markdown-projects
 ```
 
 See [INSTALL.md](references/INSTALL.md) for details.
